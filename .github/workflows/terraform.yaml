@@ -28,3 +28,6 @@ jobs:
               run: |
                 terraform init 
               working-directory: ./main
+            - name: call a sec
+              run: |
+                echo "${{env.ARM_CLIENT_ID}}"
