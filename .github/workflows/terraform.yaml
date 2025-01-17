@@ -10,6 +10,7 @@ env:
     ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
     ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
     ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
+    TERRAFORM_WORKING_DIRECTORY: main
 jobs:
     terraform:
         environment: 
@@ -25,4 +26,5 @@ jobs:
                terraform --version
             - name: 🍏 Terraform init
               run: |
+               working-directory: ${{env.TERRAFORM_WORKING_DIRECTORY}}/
                terraform init 
