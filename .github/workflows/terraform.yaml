@@ -26,5 +26,5 @@ jobs:
                terraform --version
             - name: 🍏 Terraform init
               run: |
-               working-directory: ${{env.TERRAFORM_WORKING_DIRECTORY}}/
-               terraform init 
+                terraform init 
+              working-directory: ./main
