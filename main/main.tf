@@ -22,8 +22,8 @@ provider "azurerm" {
 
 module "app_service" {
 source = "../modules/Webapp"
-app_plan_name = "githubappbush"
-app_service_name = "githubappbush"
+app_plan_name = var.marc
+app_service_name = var.marc
 rg_location = "West Europe"
 rg_name = "RG_GITHUB"          
 
@@ -38,3 +38,4 @@ rg_name = "RG_mac"
 }
 
 variable "madic" {}
+variable "marc" {}
