@@ -25,7 +25,7 @@ source = "../modules/Webapp"
 app_plan_name = "githubappbush"
 app_service_name = "githubappbush"
 rg_location = "West Europe"
-rg_name = "RG_GITHUB"
+rg_name = "RG_GITHUB"          
 
 }
 
