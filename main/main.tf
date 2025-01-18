@@ -37,6 +37,4 @@ rg_location = "West Europe"
 rg_name = "RG_mac"
 }
 
-variable "madic" {
-  default = "madicapp"
-}
+variable "madic" {}

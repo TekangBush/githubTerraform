@@ -10,6 +10,8 @@ env:
     ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
     ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
     ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
+    TF_VAR_MADIC: ${{vars.appname}}
+
     TERRAFORM_WORKING_DIRECTORY: main
 jobs:
     terraform:
@@ -33,12 +35,12 @@ jobs:
                 echo "${{env.ARM_CLIENT_ID}}"
             - name: 🍏 Terraform plan 
               run: |
-                terraform plan 
+                terraform plan -var="madic=${{env.TF_VAR_MADIC}}"
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             - name: 🍏terraform apply
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               run: |
-                terraform apply -auto-approve
+                terraform apply -auto-approve -var="madic=${{env.TF_VAR_MADIC}}"
 
             # - name: 🍏 Terraform destroy
             #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
