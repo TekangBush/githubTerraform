@@ -31,3 +31,6 @@ jobs:
             - name: 🍏call a sec
               run: |
                 echo "${{env.ARM_CLIENT_ID}}"
+            - name: 🍏 Terraform plan 
+              run: |
+                terraform plan 
