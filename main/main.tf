@@ -29,10 +29,10 @@ rg_name = "RG_GITHUB"
 
 }
 
-module "madicotest" {
-  source = "../modules/Webapp"
-app_plan_name = "madicowebappsvc"
-app_service_name = "madicowebappsvc"
-rg_location = "West Europe"
-rg_name = "RG_GITHUB"
-}
+# module "madicotest" {
+#   source = "../modules/Webapp"
+# app_plan_name = "madicowebappsvc"
+# app_service_name = "madicowebappsvc"
+# rg_location = "West Europe"
+# rg_name = "RG_GITHUB"
+# }
