@@ -27,7 +27,7 @@ jobs:
             - name: 🍏 Terraform init
               run: |
                 terraform init 
-              working-directory: ./main
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             - name: call a sec
               run: |
                 echo "${{env.ARM_CLIENT_ID}}"
