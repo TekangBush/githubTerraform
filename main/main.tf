@@ -7,7 +7,7 @@ terraform {
   }
   backend "azurerm" {
       resource_group_name  = "Github_rg"
-      storage_account_name = "madicotekangtf"
+      storage_account_name = "bushstorageterraform"
       container_name       = "madicotekangtf"
       key                  = "devtf"
   }
