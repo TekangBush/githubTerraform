@@ -35,3 +35,7 @@ jobs:
               run: |
                 terraform plan 
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            - name: 🍏terraform apply
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+              run: |
+                terraform apply -auto-approve
