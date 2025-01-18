@@ -43,4 +43,4 @@ jobs:
             - name: 🍏 Terraform destroy
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               run: |
-                terraform destory -auto-approve
+                terraform destroy -auto-approve
