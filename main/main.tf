@@ -5,6 +5,12 @@ terraform {
       version = "=4.1.0"
     }
   }
+  backend "azurerm" {
+      resource_group_name  = "Github_rg"
+      storage_account_name = "madicotekangtf"
+      container_name       = "madicotekangtf"
+      key                  = "devtf"
+  }
 }
 
 # Configure the Microsoft Azure Provider
