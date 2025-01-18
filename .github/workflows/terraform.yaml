@@ -39,3 +39,9 @@ jobs:
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               run: |
                 terraform apply -auto-approve
+
+            - name: 🍏 Terraform destroy
+            - name: 🍏terraform apply
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+              run: |
+                terraform apply -auto-approve
