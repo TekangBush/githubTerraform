@@ -40,14 +40,38 @@ jobs:
             - name: 🍏call a sec
               run: |
                 echo "${{env.ARM_CLIENT_ID}}"
+
+
             - name: 🍏 Terraform plan 
               run: |
-                terraform plan 
+                terraform plan -no-color -out=tfplan | tee tfplan.log
+              env:
+                TF_INPUT: 0
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
-            - name: 🍏terraform apply
-              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
-              run: |
-                terraform apply -auto-approve 
+
+            - name: 🍏 Save Plan Artifact
+              uses: actions/upload-artifact@v3
+              with: 
+                name: tf-plan
+                path: ${{env.TERRAFORM_WORKING_DIRECTORY}}/tfplan
+
+            - name: 🍏 Comment terrafom plan 
+              uses: peter-evans/create-or-update-comment@v2
+              with: 
+                token: ${{secrets.GITHUB_TOKEN}}
+                issue-number: ${{github.event.pull_request.number}}
+                body: | 
+                  Terraform plan:
+                    ``hcl
+                    $(cat ${{env.TERRAFORM_WORKING_DIRECTORY}}/tfplan.log)
+                    ```
+                    Plan saved to Github artifact: `tf-plan`
+
+
+            # - name: 🍏terraform apply
+            #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            #   run: |
+            #     terraform apply -auto-approve 
             # - name: 🍏 Terraform destroy
             #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             #   run: |
