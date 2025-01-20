@@ -68,7 +68,7 @@ jobs:
                     Plan saved to Github artifact: `tf-plan`
 
 
-            # - name: 🍏terraform apply
+            # #- name: 🍏terraform apply
             #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             #   run: |
             #     terraform apply -auto-approve 
