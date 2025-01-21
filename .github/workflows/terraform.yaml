@@ -55,7 +55,7 @@ jobs:
                  terraform validate 
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             # Run a terraform plan for pull requests only
-            - name: Terraform Plan
+            - name: 🍏Terraform Plan
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               id: plan
        
@@ -63,7 +63,7 @@ jobs:
               run: terraform plan -no-color
 
             # Add a comment to pull requests with plan results
-            - name: add-plan-comment
+            - name: 🍏add-plan-comment
               id: comment
               uses: actions/github-script@v3
               if: github.event_name == 'pull_request'
@@ -93,7 +93,7 @@ jobs:
                     })
 
 
-            - name: Terraform Apply
+            - name: 🍏Terraform Apply
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               run: terraform apply -auto-approve
