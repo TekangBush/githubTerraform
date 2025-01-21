@@ -4,6 +4,10 @@ on:
         branches: 
             - main
             - dev
+    pull_request: 
+        branches: 
+            - main 
+            - dev
     workflow_dispatch: 
 env:
     ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
@@ -41,38 +45,78 @@ jobs:
               run: |
                 echo "${{env.ARM_CLIENT_ID}}"
 
-
-            - name: 🍏 Terraform plan 
-              run: |
-                terraform plan -no-color -out=tfplan | tee tfplan.log
+            # Run a terraform plan for pull requests only
+            - name: Terraform Plan
+              id: plan
               env:
-                TF_INPUT: 0
-              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+                ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+                ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+                ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+                ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+              if: github.event_name == 'pull_request'
+              run: terraform plan -no-color
 
-            - name: 🍏 Save Plan Artifact
-              uses: actions/upload-artifact@v3
-              with: 
-                name: tf-plan
-                path: ${{env.TERRAFORM_WORKING_DIRECTORY}}/tfplan
+            # Add a comment to pull requests with plan results
+            - name: add-plan-comment
+              id: comment
+              uses: actions/github-script@v3
+              if: github.event_name == 'pull_request'
+              env:
+                PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+              with:
+                github-token: ${{ secrets.GITHUB_TOKEN }}
+                script: |
+                    const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+                    #### Terraform Initialization \`${{ steps.init.outcome }}\`
+                    #### Terraform Validation ${{ steps.validate.outputs.stdout }}
+                    #### Terraform Plan \`${{ steps.plan.outcome }}\`
+                
+                    <details><summary>Show Plan</summary>
+                    
+                    \`\`\`${process.env.PLAN}\`\`\`
+                    
+                    </details>
+                    
+                    *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+                    
+                    github.issues.createComment({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: output
+                    })
 
-            - name: 🍏 Comment terrafom plan 
-              uses: peter-evans/create-or-update-comment@v2
-              with: 
-                token: ${{secrets.GITHUB_TOKEN}}
-                issue-number: ${{github.event.pull_request.number}}
-                body: | 
-                  Terraform plan:
-                    ``hcl
-                    $(cat ${{env.TERRAFORM_WORKING_DIRECTORY}}/tfplan.log)
-                    ```
-                    Plan saved to Github artifact: `tf-plan`
-
-
-            # #- name: 🍏terraform apply
-            #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            # - name: 🍏 Terraform plan 
             #   run: |
-            #     terraform apply -auto-approve 
-            # - name: 🍏 Terraform destroy
+            #     terraform plan -no-color -out=tfplan | tee tfplan.log
+            #   env:
+            #     TF_INPUT: 0
             #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
-            #   run: |
-            #     terraform destroy -auto-approve
+
+            # - name: 🍏 Save Plan Artifact
+            #   uses: actions/upload-artifact@v3
+            #   with: 
+            #     name: tf-plan
+            #     path: ${{env.TERRAFORM_WORKING_DIRECTORY}}/tfplan
+
+            # - name: 🍏 Comment terrafom plan 
+            #   uses: peter-evans/create-or-update-comment@v2
+            #   with: 
+            #     token: ${{secrets.GITHUB_TOKEN}}
+            #     issue-number: ${{github.event.pull_request.number}}
+            #     body: | 
+            #       Terraform plan:
+            #         ``hcl
+            #         $(cat ${{env.TERRAFORM_WORKING_DIRECTORY}}/tfplan.log)
+            #         ```
+            #         Plan saved to Github artifact: `tf-plan`
+
+
+            # # #- name: 🍏terraform apply
+            # #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            # #   run: |
+            # #     terraform apply -auto-approve 
+            # # - name: 🍏 Terraform destroy
+            # #   working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            # #   run: |
+            # #     terraform destroy -auto-approve
