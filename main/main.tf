@@ -9,7 +9,7 @@ terraform {
       resource_group_name  = "Github_rg"
       storage_account_name = "bushstorageterraform"
       container_name       = "madicotekangtf"
-      key                  = "devtf"
+      key                  = "stage"
   }
 }
 
