@@ -22,6 +22,10 @@ env:
 
 jobs:
     terraform:
+        permissions:
+          contents: read
+          pull-requests: write
+          issues: write
         environment: 
             name: Dev
         runs-on: ubuntu-latest
@@ -45,8 +49,17 @@ jobs:
               run: |
                 echo "${{env.ARM_CLIENT_ID}}"
 
+            - name: 🍏 Format Terraform code 
+              run: |
+                terraform fmt -recursive 
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            - name: 🍏 validate Terraform code 
+              if: always()
+              run: |
+                 terraform validate 
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             # Run a terraform plan for pull requests only
-            - name: Terraform Plan
+            - name: 🍏Terraform Plan
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               id: plan
        
@@ -54,14 +67,15 @@ jobs:
               run: terraform plan -no-color
 
             # Add a comment to pull requests with plan results
-            - name: add-plan-comment
+            - name: 🍏add-plan-comment
               id: comment
               uses: actions/github-script@v3
               if: github.event_name == 'pull_request'
+              
               env:
                 PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
               with:
-                github-token: ${{ secrets.PAT_TOKEN }}
+                github-token: ${{ secrets.GITHUB_TOKEN  }}
                 script: |
                     const output = `#### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
                     #### Terraform Initialization \`${{ steps.init.outcome }}\`
@@ -84,7 +98,7 @@ jobs:
                     })
 
 
-            - name: Terraform Apply
+            - name: 🍏Terraform Apply
               if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               run: terraform apply -auto-approve
