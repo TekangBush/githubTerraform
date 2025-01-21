@@ -47,12 +47,13 @@ jobs:
 
             # Run a terraform plan for pull requests only
             - name: Terraform Plan
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
               id: plan
-              env:
-                ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-                ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-                ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-                ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            #   env:
+            #     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+            #     ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+            #     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+            #     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
               if: github.event_name == 'pull_request'
               run: terraform plan -no-color
 
