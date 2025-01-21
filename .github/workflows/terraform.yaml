@@ -45,6 +45,15 @@ jobs:
               run: |
                 echo "${{env.ARM_CLIENT_ID}}"
 
+            - name: 🍏 Format Terraform code 
+              run: |
+                terraform fmt -recursive 
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
+            - name: 🍏 validate Terraform code 
+              if: always()
+              run: |
+                 terraform validate 
+              working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}
             # Run a terraform plan for pull requests only
             - name: Terraform Plan
               working-directory: ./${{env.TERRAFORM_WORKING_DIRECTORY}}

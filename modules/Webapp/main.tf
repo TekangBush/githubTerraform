@@ -17,7 +17,7 @@ resource "azurerm_app_service_plan" "appplan1" {
 resource "azurerm_app_service" "example" {
   name                = var.app_service_name
   location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name     = azurerm_resource_group.example.name
   app_service_plan_id = azurerm_app_service_plan.appplan1.id
 
   site_config {
