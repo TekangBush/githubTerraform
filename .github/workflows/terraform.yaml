@@ -86,7 +86,7 @@ jobs:
                     body: output
                     })
 
-            # - name: 🍏 Terraform plan 
+            ## - name: 🍏 Terraform plan 
             #   run: |
             #     terraform plan -no-color -out=tfplan | tee tfplan.log
             #   env:
